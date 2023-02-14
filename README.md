@@ -11,6 +11,9 @@ pip install mondossierweb
 ## Usage
 
 ```
-Usage: mondossierweb [USERNAME] [PASSWORD_COMMAND] [GRADE_CODE] [SAVE_AS]
-       mondossierweb --help
+Usage: mondossierweb [SAVE_AS] [URL] [GRADE_CODE] [USERNAME] [PASSWORD_COMMAND]  
+       mondossierweb --help 
+
+Environment variables:
+    MDW_USE_CACHE: if set, the HTML will be cached to mdw.html and will be reused if it exists.
 ```
