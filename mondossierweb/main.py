@@ -139,13 +139,13 @@ def to_dict(document, grade_code):
     return grades
 
 
-def diff_with_previous(new_grades):
+def diff_with_previous(new_grades, save_as):
     changes = {}
-    if not Path("grades.json").exists():
+    if not save_as.exists():
         return
     print("Previous grades file found, checking for differences.")
     print("\tLoading previous grades")
-    old_grades = json.loads(Path("grades.json").read_text())
+    old_grades = json.loads(save_as.read_text())
 
     print("\n")
     for key in new_grades.keys() - old_grades.keys():
@@ -174,11 +174,14 @@ def main():
     print("Parsing HTML table into dict")
     grades = to_dict(document, grade_code)
     print(f"Got grades: {grades}")
-    changed = diff_with_previous(grades)
+    changes = diff_with_previous(grades, save_as)
     print(f"Writing to {save_as}")
     save_as.write_text(json.dumps(grades, indent=4))
 
-    sys.exit(1 if changed else 0)
+    if changes:
+        run(["pb", "push", "--link", "https://media.ewen.works/grades.json", "--title", "MDW: Changements", '\n'.join(f"{label}: {grade['grade']}" for label, grade in changes.items())])
+
+    sys.exit(1 if changes else 0)
 
 if __name__ == "__main__":
     main()
