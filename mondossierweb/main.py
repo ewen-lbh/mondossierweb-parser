@@ -4,7 +4,7 @@ Usage: mondossierweb [SAVE_AS] [URL] [GRADE_CODE] [USERNAME] [PASSWORD_COMMAND]
        mondossierweb --help 
 
 Environment variables:
-    MDW_USE_CACHE: if set, the HTML will be cached to mdw.html and will be reused if it exists.
+    MDW_USE_CACHE: if set to 1, the HTML will be cached to mdw.html and will be reused if it exists.
 """
 
 from pathlib import Path
@@ -65,7 +65,7 @@ def get_password(password_command):
 
 
 def get_html(username, password_command, grade_code, url):
-    if Path("mdw.html").exists():
+    if os.getenv("MDW_USE_CACHE") == "1" and Path("mdw.html").exists():
         print("\tUsing cached HTML")
         return BeautifulSoup(Path("mdw.html").read_text(), features="lxml")
     print(f"\tOpening {url}…")
