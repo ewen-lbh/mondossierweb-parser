@@ -17,14 +17,13 @@ from docopt import docopt
 from bs4 import BeautifulSoup
 from helium import write, click, S, start_firefox, kill_browser,scroll_down
 from typing import NamedTuple, Literal
+from selenium.webdriver import FirefoxProfile
 import selenium.common.exceptions
 import sys
 import os
 
 HEADLESS = True
 
-display = Display(visible=int(not HEADLESS), size=(1920, 1080))
-display.start()
 
 
 class Grade(NamedTuple):
@@ -75,8 +74,13 @@ def get_html(username, password_command, grade_code, url):
     if os.getenv("MDW_USE_CACHE") == "1" and Path("mdw.html").exists():
         print("\tUsing cached HTML")
         return BeautifulSoup(Path("mdw.html").read_text(), features="lxml")
+
+    display = Display(visible=int(not HEADLESS), size=(1920, 1080))
+    display.start()
     print(f"\tOpening {url}…")
-    start_firefox(url, headless=False)
+    profile = FirefoxProfile()
+    profile.set_preference('general.useragent.override', "Ceci est un script d'automatisation inoffensif réalisé par un élève de l'n7. Contact: hey@ewen.works; Code source: https://github.com/ewen-lbh/mondossierweb-parser")
+    start_firefox(url, headless=False, profile=profile)
     print("\tTyping username")
     write(username, into="Username")
     print("\tTyping password")
