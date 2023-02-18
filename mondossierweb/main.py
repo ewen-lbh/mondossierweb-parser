@@ -12,13 +12,19 @@ from datetime import datetime
 import json
 from subprocess import run
 from time import sleep
+from pyvirtualdisplay import Display
 from docopt import docopt
 from bs4 import BeautifulSoup
-from helium import write, click, S, start_firefox, kill_browser
+from helium import write, click, S, start_firefox, kill_browser,scroll_down
 from typing import NamedTuple, Literal
 import selenium.common.exceptions
 import sys
 import os
+
+HEADLESS = True
+
+display = Display(visible=int(not HEADLESS), size=(1920, 1080))
+display.start()
 
 
 class Grade(NamedTuple):
@@ -70,12 +76,13 @@ def get_html(username, password_command, grade_code, url):
         print("\tUsing cached HTML")
         return BeautifulSoup(Path("mdw.html").read_text(), features="lxml")
     print(f"\tOpening {url}…")
-    start_firefox(url, headless=True)
+    start_firefox(url, headless=False)
     print("\tTyping username")
     write(username, into="Username")
     print("\tTyping password")
     write(get_password(password_command), into="Password")
     print("\tLogging in…")
+    scroll_down(500)
     click("Login")
     try:
         if "Invalid credentials" in S("body").web_element.text:
@@ -102,6 +109,7 @@ def get_html(username, password_command, grade_code, url):
         Path("mdw.html").write_text(html)
     parsed = BeautifulSoup(html, features="lxml")
     kill_browser()
+    display.stop()
     return parsed
 
 
