@@ -8,6 +8,7 @@ Environment variables:
 """
 
 from pathlib import Path
+from datetime import datetime
 import json
 from subprocess import run
 from time import sleep
@@ -176,7 +177,7 @@ def main():
     print(f"Got grades: {grades}")
     changes = diff_with_previous(grades, save_as)
     print(f"Writing to {save_as}")
-    save_as.write_text(json.dumps(grades, indent=4))
+    save_as.write_text(json.dumps({"updated_at": str(datetime.now())} | grades, indent=4))
 
     if changes:
         run(["pb", "push", "--link", "https://media.ewen.works/grades.json", "--title", "MDW: Changements", '\n'.join(f"{label}: {grade['grade']}" for label, grade in changes.items())])
