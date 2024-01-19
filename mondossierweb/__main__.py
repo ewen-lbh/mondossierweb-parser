@@ -42,6 +42,8 @@ def configure():
     def cli_arg_or(key, ask_message):
         if (arg := opts.get(key)) is not None:
             return arg
+        elif (arg := os.getenv(key)) is not None and arg != "":
+            return arg
         return input(ask_message)
 
     username = cli_arg_or("USERNAME", "Username: ")
@@ -98,14 +100,20 @@ def get_html(username, password_command, grade_code, url):
 
     print("\tWaiting for page to load…")
     sleep(3)
-    print("\tClosing reminder")
-    click("Fermer")
+    try:
+        print("\tClosing reminder")
+        click("Fermer")
+    except:
+        pass
     print("\tNavigating to grades page")
     click("Notes & résultats")
     print("\tOpening grades table")
     click(grade_code)
-    print("\tClosing annoying reminder")
-    click("Fermer")
+    try:
+        print("\tClosing annoying reminder")
+        click("Fermer")
+    except:
+        pass
     print("\tCapturing page body")
     html = S("body").web_element.get_attribute("innerHTML")
     if os.getenv("MDW_USE_CACHE"):
