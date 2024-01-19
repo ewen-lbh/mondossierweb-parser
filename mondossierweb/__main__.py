@@ -200,8 +200,8 @@ def main():
     print(f"Writing to {save_as}")
     save_as.write_text(json.dumps({"updated_at": str(datetime.now())} | grades, indent=4))
 
-    # if changes:
-    run(["pb", "push", "--link", pushbullet_link, "--title", "Nouvelles notes", '\n'.join(f"{label}: {grade['grade']}" for label, grade in grades.items())])
+    if changes:
+        run(["pb", "push", "--link", pushbullet_link, "--title", "Nouvelles notes", '\n'.join(f"{label}: {grade['grade']}" for label, grade in changes.items())])
 
     sys.exit(1 if changes else 0)
 
