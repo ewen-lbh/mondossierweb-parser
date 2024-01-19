@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Usage: mondossierweb [SAVE_AS] [URL] [GRADE_CODE] [USERNAME] [PASSWORD_COMMAND]  
+Usage: mondossierweb [SAVE_AS] [URL] [GRADE_CODE] [USERNAME] [PASSWORD_COMMAND] [PUSHBULLET_LINK]
        mondossierweb --help 
 
 Environment variables:
@@ -51,7 +51,8 @@ def configure():
     grade_code = cli_arg_or("GRADE_CODE", "Grade code (e.g. N7I51 for SN 1A): ")
     save_as = Path(cli_arg_or("SAVE_AS", "Save JSON file as: "))
     url = cli_arg_or("URL", "URL de mondossierweb: ")
-    return username, password_command, grade_code, save_as, url
+    pushbullet_link = cli_arg_or("PUSHBULLET_LINK", "Pushbullet link: ")
+    return username, password_command, grade_code, save_as, url, pushbullet_link
 
 
 def get_password(password_command):
@@ -189,7 +190,7 @@ def diff_with_previous(new_grades, save_as):
 
 
 def main():
-    username, password_command, grade_code, save_as, url = configure()
+    username, password_command, grade_code, save_as, url, pushbullet_link = configure()
     print("Getting HTML")
     document = get_html(username, password_command, grade_code, url)
     print("Parsing HTML table into dict")
@@ -199,8 +200,8 @@ def main():
     print(f"Writing to {save_as}")
     save_as.write_text(json.dumps({"updated_at": str(datetime.now())} | grades, indent=4))
 
-    if changes:
-        run(["pb", "push", "--link", "https://media.ewen.works/grades.json", "--title", "Nouvelles notes", '\n'.join(f"{label}: {grade['grade']}" for label, grade in changes.items())])
+    # if changes:
+    run(["pb", "push", "--link", pushbullet_link, "--title", "Nouvelles notes", '\n'.join(f"{label}: {grade['grade']}" for label, grade in grades.items())])
 
     sys.exit(1 if changes else 0)
 
