@@ -1,0 +1,6 @@
+services:
+  mondossierweb:
+    image: ghcr.io/ewen-lbh/mondossierweb-parser:main
+    volumes:
+      - ./grades.json:/grades.json
+    env_file: .env
