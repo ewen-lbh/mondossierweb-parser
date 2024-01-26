@@ -23,3 +23,4 @@ Environment variables:
 | School   | Year | Department | `GRADE_CODE` |
 | -------- | ---- | ---------- | ------------ |
 | ENSEEIHT | 1A   | SN         | `N7I51`      |
+| ENSEEIHT | 2A   | SN         | `N7I52`      |
