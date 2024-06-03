@@ -15,9 +15,11 @@ from time import sleep
 from pyvirtualdisplay import Display
 from docopt import docopt
 from bs4 import BeautifulSoup
-from helium import write, click, S, start_firefox, kill_browser,scroll_down
+from helium import write, click, S, start_firefox, kill_browser,scroll_down, find_all
 from typing import NamedTuple, Literal
 from selenium.webdriver import FirefoxProfile
+from selenium.webdriver.common.by import By
+from selenium import webdriver
 import selenium.common.exceptions
 import sys
 import os
@@ -83,7 +85,7 @@ def get_html(username, password_command, grade_code, url):
     print(f"\tOpening {url}…")
     profile = FirefoxProfile()
     profile.set_preference('general.useragent.override', "Ceci est un script d'automatisation inoffensif réalisé par un élève de l'n7. Contact: mondossierweb@ewen.works; Code source: https://github.com/ewen-lbh/mondossierweb-parser")
-    start_firefox(url, headless=False, profile=profile)
+    driver = start_firefox(url, headless=False, profile=profile)
     print("\tTyping username")
     write(username, into="Username")
     print("\tTyping password")
@@ -115,6 +117,10 @@ def get_html(username, password_command, grade_code, url):
         click("Fermer")
     except:
         pass
+    print("======DEBUG=======")
+    element = driver.find_element(By.XPATH, "//div[@class='v-scrollable']")
+    print(element)
+    driver.execute_script("arguments[0].scrollBy(0,500)", element)
     print("\tCapturing page body")
     html = S("body").web_element.get_attribute("innerHTML")
     if os.getenv("MDW_USE_CACHE"):
