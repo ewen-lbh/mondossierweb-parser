@@ -119,6 +119,7 @@ def get_html(username, password_command, grade_code, url):
         pass
     element = driver.find_element(By.XPATH, "//div[@class='v-scrollable']//div[@class='v-scrollable v-table-body-wrapper v-table-body']")
     driver.execute_script("arguments[0].scrollBy(0,1000)", element)
+    sleep(1)
     print("\tCapturing page body")
     html = S("body").web_element.get_attribute("innerHTML")
     if os.getenv("MDW_USE_CACHE"):
