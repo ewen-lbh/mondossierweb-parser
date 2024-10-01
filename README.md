@@ -37,7 +37,7 @@ USERNAME= <Your username>
 PASSWORD_COMMAND=echo '<Your password>'
 MDW_USE_CACHE=1
 PUSHBULLET_KEY=<Your pushbullet token>
-PUSHBULLET_LINK=<The link of the notif (you can let this one empty)> 
+PUSHBULLET_LINK=<The link of the notif (you can leave this one empty)> 
 ```
 
 ## Known `GRADE_CODE`s
